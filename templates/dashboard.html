@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Finance Manager{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <h1>Welcome back, {{ user.name.split(' ')[0] }}</h1>
+    <div class="sub">Here's where your money stands right now.</div>
+  </div>
+
+  <div class="card-grid">
+    <div class="stat-card income">
+      <div class="label">Total Income</div>
+      <div class="value income-text">₹{{ "%.2f"|format(total_income) }}</div>
+    </div>
+    <div class="stat-card expense">
+      <div class="label">Total Expense</div>
+      <div class="value expense-text">₹{{ "%.2f"|format(total_expense) }}</div>
+    </div>
+    <div class="stat-card savings">
+      <div class="label">Savings</div>
+      <div class="value {{ 'savings-positive' if savings >= 0 else 'savings-negative' }}">₹{{ "%.2f"|format(savings) }}</div>
+    </div>
+    <div class="stat-card budget">
+      <div class="label">Budget Used</div>
+      <div class="value budget-text">{{ budget_used_pct }}%</div>
+    </div>
+  </div>
+
+  <div class="content-grid">
+    <div class="panel">
+      <h3>Recent Transactions</h3>
+      {% if recent %}
+        <table>
+          <thead>
+            <tr><th>Category</th><th>Date</th><th>Amount</th></tr>
+          </thead>
+          <tbody>
+            {% for r in recent %}
+              <tr>
+                <td>{{ r.category }} <span class="tag tag-{{ r.type }}">{{ r.type }}</span></td>
+                <td>{{ r.date.strftime('%d %b %Y') }}</td>
+                <td>₹{{ "%.2f"|format(r.amount) }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="empty-state">No transactions yet. Add your first income or expense to see it here.</div>
+      {% endif %}
+    </div>
+
+    <div class="panel quick-actions">
+      <h3>Quick Actions</h3>
+      <a class="btn btn-income" href="{{ url_for('add_income') }}">+ Add Income</a>
+      <a class="btn btn-expense" href="{{ url_for('add_expense') }}">− Add Expense</a>
+      <a class="btn btn-budget" href="{{ url_for('set_budget') }}">🗂 Set Budget</a>
+    </div>
+  </div>
+{% endblock %}

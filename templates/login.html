@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Log in · Finance Manager</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-visual">
+      <div class="brand">◆ Finance Manager</div>
+      <div>
+        <h1>Welcome back to your finances.</h1>
+        <p>Pick up where you left off — check your budget, log a transaction, or review this month's report.</p>
+        <div class="auth-stat-row">
+          <div class="auth-stat">
+            <div class="num">1</div>
+            <div class="label">dashboard for everything</div>
+          </div>
+          <div class="auth-stat">
+            <div class="num">0</div>
+            <div class="label">manual math</div>
+          </div>
+        </div>
+      </div>
+      <div></div>
+    </div>
+    <div class="auth-form-side">
+      <div class="auth-card">
+        <h2>Log in</h2>
+        <div class="sub">Enter your details to access your dashboard.</div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endwith %}
+
+        <form method="POST">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Your password" required>
+          </div>
+          <button type="submit" class="btn btn-income">Log in</button>
+        </form>
+
+        <div class="auth-switch">New here? <a href="{{ url_for('register') }}">Create an account</a></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

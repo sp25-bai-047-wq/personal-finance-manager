@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Reports · Finance Manager{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <h1>Financial Reports</h1>
+    <div class="sub">A snapshot of your income, spending, and where it's going.</div>
+  </div>
+
+  <div class="card-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card income">
+      <div class="label">Total Income</div>
+      <div class="value income-text">₹{{ "%.2f"|format(total_income) }}</div>
+    </div>
+    <div class="stat-card expense">
+      <div class="label">Total Expense</div>
+      <div class="value expense-text">₹{{ "%.2f"|format(total_expense) }}</div>
+    </div>
+    <div class="stat-card savings">
+      <div class="label">Savings</div>
+      <div class="value {{ 'savings-positive' if savings >= 0 else 'savings-negative' }}">₹{{ "%.2f"|format(savings) }}</div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <h3>Income vs Expense</h3>
+    <canvas id="incomeExpenseChart" height="90"></canvas>
+  </div>
+
+  {% if category_labels %}
+  <div class="chart-wrap">
+    <h3>Expenses by Category</h3>
+    <canvas id="categoryChart" height="90"></canvas>
+  </div>
+  {% endif %}
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script>
+    const textMuted = '#8996a3';
+    const gridColor = '#263140';
+
+    new Chart(document.getElementById('incomeExpenseChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Income', 'Expense'],
+        datasets: [{
+          label: 'Amount',
+          data: [{{ total_income }}, {{ total_expense }}],
+          backgroundColor: ['#34c787', '#ff6b5d'],
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: textMuted }, grid: { display: false } },
+          y: { ticks: { color: textMuted }, grid: { color: gridColor } }
+        }
+      }
+    });
+
+    {% if category_labels %}
+    new Chart(document.getElementById('categoryChart'), {
+      type: 'bar',
+      data: {
+        labels: {{ category_labels|tojson }},
+        datasets: [{
+          label: 'Spent',
+          data: {{ category_values|tojson }},
+          backgroundColor: '#f0b429',
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: textMuted }, grid: { color: gridColor } },
+          y: { ticks: { color: textMuted }, grid: { display: false } }
+        }
+      }
+    });
+    {% endif %}
+  </script>
+{% endblock %}

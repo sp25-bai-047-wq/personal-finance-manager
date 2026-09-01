@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Add Expense · Finance Manager{% endblock %}
+{% block content %}
+  <div class="page-head">
+    <h1>Add Expense</h1>
+    <div class="sub">Log a new payment going out.</div>
+  </div>
+
+  <div class="form-panel">
+    <div class="form-icon expense">📉</div>
+    <form method="POST">
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input type="number" step="0.01" min="0" id="amount" name="amount" placeholder="0.00" required>
+      </div>
+      <div class="field">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          {% for c in categories %}
+            <option value="{{ c }}">{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" value="{{ today }}">
+      </div>
+      <div class="field">
+        <label for="description">Description (optional)</label>
+        <textarea id="description" name="description" rows="3" placeholder="Add a note..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-expense">Save Expense</button>
+    </form>
+  </div>
+{% endblock %}
